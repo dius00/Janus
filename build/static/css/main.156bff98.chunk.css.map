@@ -1,0 +1,1 @@
+{"version":3,"sources":["styles.css"],"names":[],"mappings":"AAAA,MACE,YAAa,CACb,kBAAmB,CACnB,sBAAuB,CACvB,cAAe,CACf,kBACF","file":"main.156bff98.chunk.css","sourcesContent":[".page {\r\n  display: flex;\r\n  align-items: center;\r\n  justify-content: center;\r\n  flex-wrap: wrap;\r\n  flex-direction: row;\r\n}"]}
