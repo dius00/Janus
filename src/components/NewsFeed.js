@@ -1,17 +1,33 @@
 import React, {useEffect, useState} from 'react'
-import Nav from 'react-bootstrap/Nav'
+import Tabs from 'react-bootstrap/Tabs'
+import Tab from 'react-bootstrap/Tab'
+import Toast from 'react-bootstrap/Toast'
+import ToastHeader from 'react-bootstrap/ToastHeader'
 import { useAuth } from "../contexts/AuthContext"
 import {db} from "../firebase";
 
 
 export default function NewsFeed() {
+  
   const { currentUser } = useAuth();
+
+  const [key, setKey] = useState('0');
   const [uselections, setUselections] = useState({});
   const [health, setHealth] = useState({});
   const [business, setBusiness] = useState({});
   const [tech, setTech] = useState({});
   const [science, setScience] = useState({});
-  const [worlds, setWorld] = useState({});
+  const [world, setWorld] = useState({});
+  const [fetched, setFetched] = useState(true);
+
+  const TitleBind = {
+    "US Elections": uselections,
+    "Health": health,
+    "Business": business,
+    "Tech": tech,
+    "Science": science,
+    "World News": world,
+  };
 
   let tags = {};
 
@@ -21,69 +37,116 @@ export default function NewsFeed() {
   else{
     (async() => {
       try{
-      tags = await db.collection("userpref").doc(currentUser.email).get();
+      tags = (await db.collection("userpref").doc(currentUser.email).get()).data();
       } catch(err) { console.log(err) }
     })()
   }
 
   async function fetchPost (){
-    
+    // const test = (await db.collection("userpref").doc(currentUser.email).get()).data();
+
     if(tags.pref.includes("US Elections")){
       try{
-        const news = await((await db.collection("elections").doc()).orderBy("publishedAt","desc").limit(10).get());
-        setUselections(news);
+        let news = await db.collection("elections").orderBy("publishedAt","desc").limit(10).get();
+        const temp = [];
+        news.forEach((data) => temp.push(data.data()));
+        // console.log(temp)
+        setUselections(temp);
         } catch(err) { console.log(err) }    }
     if(tags.pref.includes("Health")){
       try{
-        const news = await (db.collection("health").doc().orderBy("publishedAt","desc").limit(10).get());
-        setHealth(news);
+        const news = await db.collection("health").orderBy("publishedAt","desc").limit(10).get();
+        const temp = [];
+        news.forEach((data) => temp.push(data.data()));
+        // console.log(temp);
+        setHealth(temp);
         } catch(err) { console.log(err) }
     }
     if(tags.pref.includes("Business")){
       try{
-        const news = await (db.collection("business").doc().orderBy("publishedAt","desc").limit(10).get());
-        setBusiness(news);
+        const news = await db.collection("business").orderBy("publishedAt","desc").limit(10).get();
+        const temp = [];
+        news.forEach((data) => temp.push(data.data()));
+        // console.log(temp);
+        setBusiness(temp);
         } catch(err) { console.log(err) }
     }
     if(tags.pref.includes("Science")){
       try{
-        const news = await (db.collection("science").doc().orderBy("publishedAt","desc").limit(10).get());
-        setScience(news);
+        const news = await db.collection("science").orderBy("publishedAt","desc").limit(10).get();
+        const temp = [];
+        news.forEach((data) => temp.push(data.data()));
+        // console.log(temp);
+        setScience(temp);
         } catch(err) { console.log(err) }
     }
     if(tags.pref.includes("Tech")){
       try{
-        const news = await (db.collection("tech").doc().orderBy("publishedAt","desc").limit(10).get());
-        setTech(news);
+        const news = await db.collection("tech").orderBy("publishedAt","desc").limit(10).get();
+        const temp = [];
+        news.forEach((data) => temp.push(data.data()));
+        // console.log(temp);
+        setTech(temp);
         } catch(err) { console.log(err) }
     }
     if(tags.pref.includes("World News")){
       try{
-        const news = await (db.collection("world").doc().orderBy("publishedAt","desc").limit(10).get());
-        setWorld(news);
+        const news = await db.collection("world").orderBy("publishedAt","desc").limit(10).get();
+        const temp = [];
+        news.forEach((data) => temp.push(data.data()));
+        // console.log(temp);
+        setWorld(temp);
         } catch(err) { console.log(err) }
     }
-    console.log("here");
+    
+    // console.log("here");
   };
-  useEffect(() => {
+
+  useEffect( () => {
     fetchPost();
-  },[])
+    setFetched(true);
+  },[]);
+
+  // const handleSelect = (eventKey) => {
+  //   console.log(eventKey);
+  //   alert(`selected ${eventKey}`)};
   // console.log(tags);
   return (<>
   {/* div className="w-100" style={{ maxWidth: "400px" } */}
-    <Nav className="w-100 pt-5" fill variant="tabs" defaultActiveKey="0">
+    <Tabs className="w-100 pt-5" 
+     id="controlled-tab-example"
+     activeKey={key}
+     onSelect={(k) => setKey(k)}
+     defaultActiveKey="0">
 
-      {tags.pref.map((value,index) => { return(
-  <Nav.Item>
-    <Nav.Link eventKey={`${index}`}>{value}</Nav.Link>
-  </Nav.Item>
+      {
+      tags.pref.map((value,index) => { return(
+  <Tab className = "page" eventKey={String(index)} title={value} >
+<div className = "page pt-3">
+    {/* {console.log(value, TitleBind[value], uselections)} */}
+    { fetched ? 
+    Array.isArray(TitleBind[value]) ?
+    // console.log(value, TitleBind, TitleBind[value])
+      TitleBind[value].map((news,index) => { return (
+        <div className="pt-1">
+          <Toast className="rounded mr-2">
+          <ToastHeader closeButton={false}>
+          <strong className="mr-auto">{news.title}   </strong>
+          <small>{news.publishedAt}</small>
+          </ToastHeader>
+          <Toast.Body>{news.description}<br></br>
+          <br></br><small><strong>Source: </strong>{news.source.name}</small>
+          <br></br><small><strong>FactCheck: </strong>{String(!news.factCheck)}</small>
+          </Toast.Body>
+          </Toast></div>)}): <br></br>
+          : "Loading"}</div>
+
+  </Tab>
   )})}
   
-  <Nav.Item>
-    <Nav.Link eventKey="disabled" disabled>
-      Reserved
-    </Nav.Link>
-  </Nav.Item>
-</Nav></>
+  <Tab eventKey="99">
+      FakeNews (dev)
+    </Tab>
+</Tabs></>
   )
 }
