@@ -5,7 +5,7 @@ import { AuthProvider } from "../contexts/AuthContext"
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import Dashboard from "./Dashboard"
 import NewsFeed from "./NewsFeed"
-
+import "../styles/styles.css";
 import Login from "./Login"
 import TagSelection from "./TagSelection"
 
