@@ -42,70 +42,71 @@ export default function NewsFeed() {
     })()
   }
 
-  async function fetchPost (){
-    // const test = (await db.collection("userpref").doc(currentUser.email).get()).data();
-
-    if(tags.pref.includes("US Elections")){
-      try{
-        let news = await db.collection("elections").orderBy("publishedAt","desc").limit(10).get();
-        const temp = [];
-        news.forEach((data) => temp.push(data.data()));
-        // console.log(temp)
-        setUselections(temp);
-        } catch(err) { console.log(err) }    }
-    if(tags.pref.includes("Health")){
-      try{
-        const news = await db.collection("health").orderBy("publishedAt","desc").limit(10).get();
-        const temp = [];
-        news.forEach((data) => temp.push(data.data()));
-        // console.log(temp);
-        setHealth(temp);
-        } catch(err) { console.log(err) }
-    }
-    if(tags.pref.includes("Business")){
-      try{
-        const news = await db.collection("business").orderBy("publishedAt","desc").limit(10).get();
-        const temp = [];
-        news.forEach((data) => temp.push(data.data()));
-        // console.log(temp);
-        setBusiness(temp);
-        } catch(err) { console.log(err) }
-    }
-    if(tags.pref.includes("Science")){
-      try{
-        const news = await db.collection("science").orderBy("publishedAt","desc").limit(10).get();
-        const temp = [];
-        news.forEach((data) => temp.push(data.data()));
-        // console.log(temp);
-        setScience(temp);
-        } catch(err) { console.log(err) }
-    }
-    if(tags.pref.includes("Tech")){
-      try{
-        const news = await db.collection("tech").orderBy("publishedAt","desc").limit(10).get();
-        const temp = [];
-        news.forEach((data) => temp.push(data.data()));
-        // console.log(temp);
-        setTech(temp);
-        } catch(err) { console.log(err) }
-    }
-    if(tags.pref.includes("World News")){
-      try{
-        const news = await db.collection("world").orderBy("publishedAt","desc").limit(10).get();
-        const temp = [];
-        news.forEach((data) => temp.push(data.data()));
-        // console.log(temp);
-        setWorld(temp);
-        } catch(err) { console.log(err) }
-    }
-    
-    // console.log("here");
-  };
+  
 
   useEffect( () => {
+    async function fetchPost (){
+      // const test = (await db.collection("userpref").doc(currentUser.email).get()).data();
+  
+      if(tags.pref.includes("US Elections")){
+        try{
+          let news = await db.collection("elections").orderBy("publishedAt","desc").limit(10).get();
+          const temp = [];
+          news.forEach((data) => temp.push(data.data()));
+          // console.log(temp)
+          setUselections(temp);
+          } catch(err) { console.log(err) }    }
+      if(tags.pref.includes("Health")){
+        try{
+          const news = await db.collection("health").orderBy("publishedAt","desc").limit(10).get();
+          const temp = [];
+          news.forEach((data) => temp.push(data.data()));
+          // console.log(temp);
+          setHealth(temp);
+          } catch(err) { console.log(err) }
+      }
+      if(tags.pref.includes("Business")){
+        try{
+          const news = await db.collection("business").orderBy("publishedAt","desc").limit(10).get();
+          const temp = [];
+          news.forEach((data) => temp.push(data.data()));
+          // console.log(temp);
+          setBusiness(temp);
+          } catch(err) { console.log(err) }
+      }
+      if(tags.pref.includes("Science")){
+        try{
+          const news = await db.collection("science").orderBy("publishedAt","desc").limit(10).get();
+          const temp = [];
+          news.forEach((data) => temp.push(data.data()));
+          // console.log(temp);
+          setScience(temp);
+          } catch(err) { console.log(err) }
+      }
+      if(tags.pref.includes("Tech")){
+        try{
+          const news = await db.collection("tech").orderBy("publishedAt","desc").limit(10).get();
+          const temp = [];
+          news.forEach((data) => temp.push(data.data()));
+          // console.log(temp);
+          setTech(temp);
+          } catch(err) { console.log(err) }
+      }
+      if(tags.pref.includes("World News")){
+        try{
+          const news = await db.collection("world").orderBy("publishedAt","desc").limit(10).get();
+          const temp = [];
+          news.forEach((data) => temp.push(data.data()));
+          // console.log(temp);
+          setWorld(temp);
+          } catch(err) { console.log(err) }
+      }
+      
+      // console.log("here");
+    };
     fetchPost();
     setFetched(true);
-  },[]);
+  },[tags.pref]);
 
   // const handleSelect = (eventKey) => {
   //   console.log(eventKey);
