@@ -38,6 +38,9 @@ export default function Dashboard() {
           <Link to="/TagSelection" className="btn btn-primary w-100 mt-3">
             Select Tags
           </Link>
+          <Link to="/NewsFeed" className="btn btn-primary w-100 mt-3">
+            NewsFeed
+          </Link>
         </Card.Body>
       </Card>
       <div className="w-100 text-center mt-2">

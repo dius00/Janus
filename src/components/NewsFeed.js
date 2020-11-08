@@ -4,6 +4,8 @@ import Tab from 'react-bootstrap/Tab'
 import Toast from 'react-bootstrap/Toast'
 import ToastHeader from 'react-bootstrap/ToastHeader'
 import { useAuth } from "../contexts/AuthContext"
+import { Link } from "react-router-dom"
+
 import {db} from "../firebase";
 
 
@@ -19,6 +21,7 @@ export default function NewsFeed() {
   const [science, setScience] = useState({});
   const [world, setWorld] = useState({});
   const [fetched, setFetched] = useState(true);
+  
 
   const TitleBind = {
     "US Elections": uselections,
@@ -30,17 +33,21 @@ export default function NewsFeed() {
   };
 
   let tags = {};
+  tags.pref = [];
 
   if(localStorage.getItem("Janus-tags")) {
     tags.pref = localStorage.getItem("Janus-tags").split(",");
   }
   else{
-    (async() => {
+    async function retrieve() {
       try{
-      tags = (await db.collection("userpref").doc(currentUser.email).get()).data();
+      const data = await db.collection("userpref").doc(currentUser.email).get()
+      localStorage.setItem("Janus-tags",data.data().pref);
       } catch(err) { console.log(err) }
-    })()
+    }
+    retrieve();
   }
+  
 
   
 
@@ -104,9 +111,17 @@ export default function NewsFeed() {
       
       // console.log("here");
     };
+    async function retrieve() {
+      try{
+      const data = await db.collection("userpref").doc(currentUser.email).get()
+      localStorage.setItem("Janus-tags",data.data().pref);
+      } catch(err) { console.log(err) }
+    }
+    if(!localStorage.getItem("Janus-tags")) retrieve();
+    
     fetchPost();
     setFetched(true);
-  },[tags.pref]);
+  },[tags.pref, currentUser.email]);
 
   // const handleSelect = (eventKey) => {
   //   console.log(eventKey);
@@ -114,6 +129,9 @@ export default function NewsFeed() {
   // console.log(tags);
   return (<>
   {/* div className="w-100" style={{ maxWidth: "400px" } */}
+  <Link to="/" className="btn btn-primary w-100 mt-3">
+            User Profile
+          </Link>
     <Tabs className="w-100 pt-5" 
      id="controlled-tab-example"
      activeKey={key}
@@ -123,29 +141,29 @@ export default function NewsFeed() {
       {
       tags.pref.map((value,index) => { return(
   <Tab className = "page" eventKey={String(index)} title={value} >
-<div className = "page pt-3">
+<div className = "page p-3">
     {/* {console.log(value, TitleBind[value], uselections)} */}
     { fetched ? 
     Array.isArray(TitleBind[value]) ?
     // console.log(value, TitleBind, TitleBind[value])
       TitleBind[value].map((news,index) => { return (
-        <div className="pt-1">
-          <Toast className="rounded mr-2">
+        <div className="p-1">
+          <Toast className="rounded m-2">
           <ToastHeader closeButton={false}>
-          <strong className="mr-auto">{news.title}   </strong>
+          <strong className="m-auto">{news.title}   </strong>
           <small>{news.publishedAt}</small>
           </ToastHeader>
           <Toast.Body>{news.description}<br></br>
-          <br></br><small><strong>Source: </strong>{news.source.name}</small>
-          <br></br><small><strong>FactCheck: </strong>{String(!news.factCheck)}</small>
+          <br></br><small><strong>Source: </strong>{news.source.name}</small><br></br>
+          { (!news.factCheck) ? <small class="text-success"><strong>FactCheck: </strong>{String(!news.factCheck)}</small> : 
+          <small class="text-danger"><strong>FactCheck: </strong>{String(news.factCheck.claims[0].claimReview[0].textualRating)}</small>}
           </Toast.Body>
           </Toast></div>)}): <br></br>
           : "Loading"}</div>
-
   </Tab>
   )})}
   
-  <Tab eventKey="99">
+  <Tab eventKey="{tags.pref.length}">
       FakeNews (dev)
     </Tab>
 </Tabs></>
