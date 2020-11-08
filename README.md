@@ -1,68 +1,34 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# JANUS - ReadMe
 
-## Available Scripts
+Janus is an open-source news aggregator and fact-checker licensed under GPL-3.0 License. Currently under limited active development.
 
-In the project directory, you can run:
+1. [Why ?](##why%20?)
+2. [The Tech](##the-tech---server-side.)
 
-### `npm start`
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+## Why ?
 
-### `npm test`
+I am a news junkie, always have been, I spend way more time than I am willing to admit reading the news online on a daily basis. 
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+**What if there was a place that could give me all top headlines by topic with a short meaningful summary?** 
 
-### `npm run build`
+I would save so much time! 
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+**But what about fake news?** I want to know if something is true or not, especially if I am just reading a short summary. In case it is false, however,  I do want to know why, and who made that call, so that I can keep my eyes out in case I spot it in the wild.
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+![https://images.unsplash.com/photo-1495020689067-958852a7765e?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjYzOTIxfQ](https://images.unsplash.com/photo-1495020689067-958852a7765e?ixlib=rb-1.2.1&q=85&fm=jpg&crop=entropy&cs=srgb&ixid=eyJhcHBfaWQiOjYzOTIxfQ)
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Janus is born.
 
-### `npm run eject`
+To answer my own personal quest for a tool that gave me exactly what I needed, to challenge myself technically, and create a good product that could showcase my capabilities for future job-hunting. At the time Janus was conceived I was (am currently) attending a Coding Bootcamp in Tokyo, at Code Chrysalis. After 5 weeks of study, on a solo assignment to develop a full-stack app in **48h,** Janus was born and its first MVP was deployed to firebase.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+![https://i.imgur.com/EdlEWfy.jpg](https://i.imgur.com/EdlEWfy.jpg)
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## The Tech - Server Side.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+Janus architecture is pretty straightforward. A series of **firebase functions** (currently on HTTP call, rather than Cron Job, to reduce bandwidth usage) call **gNewsApi** to fetch the 15 top headlines on a variety of topics. After, each title is sent to the **Google FactCheckAPI** if something comes up, it is attached to our news object (currently only the first result of the FactCheck API is stored) and stored into our Firestore DB. There is no static server, only cloud functions.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## The Tech - Client Side.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+The client is built using **React** (might consider switching to Vue sometime soon). User creation and authentication is handled by Firebase.
