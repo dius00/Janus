@@ -2,7 +2,7 @@
 
 Janus is an open-source news aggregator and fact-checker licensed under GPL-3.0 License. Currently under limited active development.
 
-1. [Why ?](##why%20?)
+1. [Why ?](##why-?)
 2. [The Tech](##the-tech---server-side.)
 
 
